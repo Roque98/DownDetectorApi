@@ -1,0 +1,4 @@
+# Ignore diagnostic output files
+output/
+*.html
+*.json

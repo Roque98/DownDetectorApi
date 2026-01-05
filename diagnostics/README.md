@@ -1,35 +1,70 @@
 # Diagnóstico de DownDetector API
 
-## Problema
+## Problemas comunes
 
-Si la API funciona en tu equipo local pero **no funciona en el servidor** (devuelve respuesta vacía), es porque Puppeteer necesita configuración especial.
+### Problema 1: Devuelve datos vacíos `[]`
 
-## Solución en 3 pasos
+Si obtienes:
+```json
+{ "reports": [], "baseline": [] }
+```
 
-### 1. Ejecutar diagnóstico en el servidor
+**Lee:** `EMPTY_DATA.md` - El problema es el **nombre del servicio** o DownDetector cambió su estructura.
+
+### Problema 2: Error de Puppeteer / No funciona en el servidor
+
+Si obtienes errores de "Could not find Chrome" o similar.
+
+**Lee:** `TROUBLESHOOTING.md` - El problema es **configuración de Puppeteer**.
+
+---
+
+## Comandos de diagnóstico disponibles
+
+```bash
+# 1. Verificar que Puppeteer funciona
+npm run diagnose
+
+# 2. Verificar todos los servicios configurados
+npm run diagnose:services
+
+# 3. Capturar HTML de un servicio específico
+npm run diagnose:html [service] [domain]
+# Ejemplo: npm run diagnose:html telegram com
+```
+
+## Pasos de diagnóstico
+
+### Paso 1: Ejecutar diagnóstico general
 
 ```bash
 npm run diagnose
 ```
 
-O directamente:
+**Resultado esperado:**
+- ✅ `ALL TESTS PASSED` → Puppeteer funciona, ve al Paso 2
+- ❌ `Failed` → Lee `TROUBLESHOOTING.md` para arreglar Puppeteer
+
+### Paso 2: Verificar servicios
 
 ```bash
-node diagnostics/puppeteer-test.js
+npm run diagnose:services
 ```
 
-Este script te dirá exactamente qué está fallando.
+Este comando revisa todos tus servicios en `services.config.json` y te dice:
+- ✅ Cuáles funcionan correctamente
+- ⚠️ Cuáles existen pero no tienen datos
+- ❌ Cuáles no existen (nombre incorrecto)
 
-### 2. Leer la solución
+**Si encuentras servicios sin datos o no encontrados:**
+- Lee `EMPTY_DATA.md` para soluciones
 
-El script te indicará qué archivo leer:
+### Paso 3: Aplicar la solución
 
-- **TROUBLESHOOTING.md** - Guía completa con todas las soluciones posibles
-- **PUPPETEER_FIX.md** - Implementación rápida si solo necesitas ajustar configuración
-
-### 3. Aplicar la solución
-
-Sigue las instrucciones del archivo correspondiente.
+Sigue las instrucciones del archivo correspondiente:
+- **EMPTY_DATA.md** - Corregir nombres de servicios
+- **TROUBLESHOOTING.md** - Arreglar Puppeteer
+- **PUPPETEER_FIX.md** - Fix rápido de configuración
 
 ---
 
@@ -37,10 +72,14 @@ Sigue las instrucciones del archivo correspondiente.
 
 | Archivo | Descripción |
 |---------|-------------|
-| `puppeteer-test.js` | Script de diagnóstico automático |
-| `TROUBLESHOOTING.md` | Guía completa de soluciones (instalar dependencias, Docker, etc.) |
-| `PUPPETEER_FIX.md` | Solución rápida para configurar Puppeteer |
-| `README.md` | Este archivo |
+| `README.md` | Este archivo - Guía de inicio |
+| `EMPTY_DATA.md` | **Solución para datos vacíos** - Corregir nombres de servicios |
+| `TROUBLESHOOTING.md` | Solución para problemas de Puppeteer |
+| `PUPPETEER_FIX.md` | Fix rápido de configuración Puppeteer |
+| `puppeteer-test.js` | Script: Verificar que Puppeteer funciona |
+| `verify-services.js` | Script: Verificar todos los servicios |
+| `capture-html.js` | Script: Capturar HTML de un servicio |
+| `output/` | Carpeta con resultados de diagnósticos |
 
 ---
 
