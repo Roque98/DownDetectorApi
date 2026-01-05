@@ -13,21 +13,51 @@ export class DowndetectorService {
     domain: string = 'com'
   ): Promise<DowndetectorResponse> {
     try {
-      console.log(`Fetching data for ${serviceName} from downdetector.${domain}...`);
+      console.log(`[DownDetector] Fetching data for ${serviceName} from downdetector.${domain}...`);
+      console.log(`[DownDetector] Node version: ${process.version}`);
+      console.log(`[DownDetector] Platform: ${process.platform} ${process.arch}`);
 
       const response = await downdetector(serviceName, domain);
 
-      if (!response || !response.reports) {
-        throw new Error(`Invalid response from Downdetector for ${serviceName}`);
+      console.log(`[DownDetector] Response received for ${serviceName}:`, JSON.stringify(response, null, 2));
+
+      if (!response) {
+        console.error(`[DownDetector] ❌ Response is null or undefined`);
+        throw new Error(`Null response from Downdetector for ${serviceName}`);
+      }
+
+      if (!response.reports) {
+        console.error(`[DownDetector] ❌ Response missing 'reports' property`);
+        console.error(`[DownDetector] Response keys:`, Object.keys(response));
+        throw new Error(`Invalid response structure from Downdetector for ${serviceName}`);
+      }
+
+      if (response.reports.length === 0) {
+        console.warn(`[DownDetector] ⚠️  Received empty reports array for ${serviceName}`);
       }
 
       console.log(
-        `✓ Fetched ${response.reports.length} reports and ${response.baseline?.length || 0} baseline entries for ${serviceName}`
+        `[DownDetector] ✓ Fetched ${response.reports.length} reports and ${response.baseline?.length || 0} baseline entries for ${serviceName}`
       );
 
       return response as DowndetectorResponse;
     } catch (error) {
-      console.error(`✗ Error fetching data for ${serviceName}:`, error);
+      console.error(`[DownDetector] ❌ Error fetching data for ${serviceName}:`);
+      console.error(`[DownDetector] Error type: ${error?.constructor?.name}`);
+      console.error(`[DownDetector] Error message: ${error instanceof Error ? error.message : String(error)}`);
+
+      if (error instanceof Error && error.stack) {
+        console.error(`[DownDetector] Stack trace:`, error.stack);
+      }
+
+      // Log additional error details if available
+      if (error && typeof error === 'object') {
+        const errorDetails = Object.keys(error).filter(key => key !== 'stack');
+        if (errorDetails.length > 0) {
+          console.error(`[DownDetector] Error details:`, JSON.stringify(error, errorDetails, 2));
+        }
+      }
+
       throw new Error(
         `Failed to fetch Downdetector data for ${serviceName}: ${error instanceof Error ? error.message : 'Unknown error'}`
       );
