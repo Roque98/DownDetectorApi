@@ -23,6 +23,7 @@ database/sp_MonitorServiciosInactivos.sql
 | @TituloGrupoTelegram | VARCHAR(1000) | 'Pruebas Angel telegram src' | Grupo de Telegram donde enviar la alerta |
 | @MinutosSinDatos | INT | 20 | Tiempo en minutos sin datos para considerar servicio inactivo |
 | @MinutosEntreAlertas | INT | 30 | Tiempo minimo entre alertas para evitar spam (no implementado aun) |
+| @DiasRetencion | INT | 4 | Dias de retencion de datos historicos. Registros mas antiguos se eliminan automaticamente |
 
 ## Ejecucion Manual
 
@@ -37,6 +38,13 @@ EXEC dbo.MonitorServiciosInactivos
 EXEC dbo.MonitorServiciosInactivos
     @TituloGrupoTelegram = 'Pruebas Angel telegram src',
     @MinutosSinDatos = 30  -- 30 minutos en lugar de 20
+```
+
+### Configurar retencion de datos
+```sql
+EXEC dbo.MonitorServiciosInactivos
+    @TituloGrupoTelegram = 'Pruebas Angel telegram src',
+    @DiasRetencion = 7  -- Mantener 7 dias en lugar de 4
 ```
 
 ### Para ambiente de produccion
@@ -87,6 +95,14 @@ Si encuentra servicios inactivos, genera un mensaje con:
 
 Usa el SP `dbmensajes.dbo.EnviaAlertasTelegram` para enviar la notificacion a Telegram.
 
+### 4. Depuracion automatica de datos historicos
+
+Despues del monitoreo, el SP:
+1. Calcula la fecha limite de retencion (@FechaDepuracion = Ahora - @DiasRetencion)
+2. Elimina registros de Downdetector_Reports mas antiguos que la fecha limite
+3. Registra la cantidad de registros eliminados
+4. Incluye estadisticas de depuracion en el resultado
+
 ## Ejemplo de Mensaje
 
 ### Titulo
@@ -124,9 +140,9 @@ El SP retorna dos result sets:
 
 ### Result Set 1: Resumen
 ```
-ServiciosInactivos | UmbralMinutos | FechaRevision       | Estado
--------------------|---------------|---------------------|------------------------
-2                  | 20            | 2026-01-05 10:30:00 | Alerta enviada
+ServiciosInactivos | UmbralMinutos | FechaRevision       | RegistrosDepurados | DiasRetencion | FechaLimiteDepuracion | Estado
+-------------------|---------------|---------------------|--------------------|--------------|-----------------------|------------------------
+2                  | 20            | 2026-01-05 10:30:00 | 15420              | 4            | 2026-01-01 10:30:00   | Alerta enviada
 ```
 
 ### Result Set 2: Detalle
@@ -160,6 +176,14 @@ Si falla el envio de Telegram:
 - El SP NO falla (continua ejecucion)
 - Se retorna el resumen de servicios inactivos de todas formas
 
+### Error en depuracion
+
+Si falla la depuracion de registros antiguos:
+- El error se captura y registra en log
+- Se establece RegistrosDepurados = -1 como indicador de error
+- El SP NO falla (continua ejecucion)
+- Las alertas de servicios inactivos se envian de todas formas
+
 ## Dependencias
 
 ### Tablas requeridas
@@ -174,6 +198,7 @@ Si falla el envio de Telegram:
 - EXECUTE en `dbmensajes.dbo.EnviaAlertasTelegram`
 - SELECT en `Downdetector_Services`
 - SELECT en `Downdetector_Reports`
+- DELETE en `Downdetector_Reports` (para depuracion automatica)
 
 ## Monitoreo
 
@@ -232,6 +257,27 @@ EXEC dbo.MonitorServiciosInactivos
 2. Revisar logs de la aplicacion
 3. Verificar conectividad a DownDetector.com
 4. Verificar que el servicio este habilitado en `services.config.json`
+
+### Depuracion elimina demasiados registros
+
+Verificar el resultado del SP para confirmar cuantos registros se eliminaron:
+```sql
+-- RegistrosDepurados en el result set muestra la cantidad eliminada
+-- FechaLimiteDepuracion muestra la fecha de corte
+```
+
+Si necesita mantener mas historial, aumentar @DiasRetencion:
+```sql
+EXEC dbo.MonitorServiciosInactivos
+    @DiasRetencion = 30  -- Mantener 30 dias en lugar de 4
+```
+
+### Depuracion no elimina registros (RegistrosDepurados = -1)
+
+Esto indica un error durante la depuracion:
+1. Verificar permisos DELETE en tabla Downdetector_Reports
+2. Revisar logs del SQL Server para el mensaje de error especifico
+3. Verificar que no haya locks o transacciones bloqueando la tabla
 
 ## Mantenimiento
 
