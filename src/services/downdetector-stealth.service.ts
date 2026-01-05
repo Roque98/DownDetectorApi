@@ -2,11 +2,17 @@ import puppeteer from 'puppeteer-extra';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import * as cheerio from 'cheerio';
 import { DowndetectorResponse } from '../types';
+import { AlertService } from './alert.service';
 
 // Add stealth plugin to make Puppeteer undetectable
 puppeteer.use(StealthPlugin());
 
 export class DowndetectorStealthService {
+  private alertService: AlertService;
+
+  constructor() {
+    this.alertService = new AlertService();
+  }
   /**
    * Scrape DownDetector using stealth mode to bypass Cloudflare
    */
@@ -110,6 +116,12 @@ export class DowndetectorStealthService {
       const statusCode = response?.status() || 0;
       console.log(`[Stealth] HTTP Status: ${statusCode}`);
 
+      // Check for Cloudflare blocking (HTTP 403)
+      if (statusCode === 403) {
+        console.error(`[Stealth] HTTP 403 detected - Cloudflare blocking`);
+        await this.alertService.sendCloudflareBlockAlert(serviceName, statusCode);
+      }
+
       // Wait for Cloudflare challenge to complete (if present)
       console.log(`[Stealth] Waiting for page to fully load...`);
       await page.waitForTimeout(8000);
@@ -207,6 +219,12 @@ export class DowndetectorStealthService {
       // Check if Cloudflare blocked us
       if (html.includes('Just a moment') || html.includes('Checking your browser')) {
         console.error(`[Stealth] ❌ Cloudflare challenge detected - stealth plugin may need update`);
+        const url = `https://downdetector.${domain}/status/${serviceName}/`;
+        await this.alertService.sendServiceFailureAlert(
+          serviceName,
+          url,
+          'Cloudflare challenge page detected despite stealth mode - plugin may need update'
+        );
         throw new Error('Cloudflare challenge detected despite stealth mode');
       }
 

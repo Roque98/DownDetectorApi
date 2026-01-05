@@ -1,13 +1,16 @@
 import { ProcessorService } from './services/processor.service';
 import { getConnection, closeConnection } from './config/database';
 import { appConfig } from './config/app';
+import { AlertService } from './services/alert.service';
 
 class DowndetectorApp {
   private processor: ProcessorService;
+  private alertService: AlertService;
   private intervalId: NodeJS.Timeout | null = null;
 
   constructor() {
     this.processor = new ProcessorService();
+    this.alertService = new AlertService();
   }
 
   /**
@@ -32,6 +35,9 @@ class DowndetectorApp {
       }
       console.log(`  - Environment: ${appConfig.nodeEnv}\n`);
 
+      // Send startup alert
+      await this.alertService.sendStartupAlert();
+
       // Run based on mode
       if (appConfig.executionMode === 'once') {
         await this.runOnce();
@@ -42,6 +48,7 @@ class DowndetectorApp {
       }
     } catch (error) {
       console.error('\n✗ Initialization error:', error);
+      await this.alertService.sendErrorAlert('Application Initialization', error as Error);
       await this.shutdown(1);
     }
   }
@@ -58,6 +65,7 @@ class DowndetectorApp {
       await this.shutdown(0);
     } catch (error) {
       console.error('✗ Execution failed:', error);
+      await this.alertService.sendErrorAlert('Service Processing', error as Error);
       await this.shutdown(1);
     }
   }
@@ -100,6 +108,10 @@ class DowndetectorApp {
 
     await closeConnection();
 
+    // Send shutdown alert
+    const reason = exitCode === 0 ? 'Normal' : 'Error';
+    await this.alertService.sendShutdownAlert(reason);
+
     console.log('✓ Application stopped\n');
     process.exit(exitCode);
   }
@@ -120,11 +132,14 @@ class DowndetectorApp {
 
     process.on('uncaughtException', async (error) => {
       console.error('\n✗ Uncaught Exception:', error);
+      await this.alertService.sendErrorAlert('Uncaught Exception', error);
       await this.shutdown(1);
     });
 
     process.on('unhandledRejection', async (reason, promise) => {
       console.error('\n✗ Unhandled Rejection at:', promise, 'reason:', reason);
+      const error = reason instanceof Error ? reason : new Error(String(reason));
+      await this.alertService.sendErrorAlert('Unhandled Rejection', error);
       await this.shutdown(1);
     });
   }

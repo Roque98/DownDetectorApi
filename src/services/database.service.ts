@@ -1,8 +1,14 @@
 import * as mssql from 'mssql';
 import { getConnection } from '../config/database';
 import { Service, DowndetectorReport } from '../types';
+import { AlertService } from './alert.service';
 
 export class DatabaseService {
+  private alertService: AlertService;
+
+  constructor() {
+    this.alertService = new AlertService();
+  }
   /**
    * Get or create a service in the database
    */
@@ -11,30 +17,46 @@ export class DatabaseService {
     domain: string = 'com',
     isActive: boolean = true
   ): Promise<Service> {
-    const pool = await getConnection();
+    try {
+      const pool = await getConnection();
 
-    const result = await pool
-      .request()
-      .input('ServiceName', mssql.NVarChar(100), serviceName)
-      .input('Domain', mssql.NVarChar(10), domain)
-      .input('IsActive', mssql.Bit, isActive)
-      .execute('Downdetector_UpsertService');
+      const result = await pool
+        .request()
+        .input('ServiceName', mssql.NVarChar(100), serviceName)
+        .input('Domain', mssql.NVarChar(10), domain)
+        .input('IsActive', mssql.Bit, isActive)
+        .execute('Downdetector_UpsertService');
 
-    return result.recordset[0];
+      return result.recordset[0];
+    } catch (error) {
+      await this.alertService.sendDatabaseErrorAlert(
+        `Upsert Service: ${serviceName}`,
+        error as Error
+      );
+      throw error;
+    }
   }
 
   /**
    * Get service by name
    */
   async getServiceByName(serviceName: string): Promise<Service | null> {
-    const pool = await getConnection();
+    try {
+      const pool = await getConnection();
 
-    const result = await pool
-      .request()
-      .input('ServiceName', mssql.NVarChar(100), serviceName)
-      .query('SELECT * FROM Downdetector_Services WHERE ServiceName = @ServiceName');
+      const result = await pool
+        .request()
+        .input('ServiceName', mssql.NVarChar(100), serviceName)
+        .query('SELECT * FROM Downdetector_Services WHERE ServiceName = @ServiceName');
 
-    return result.recordset[0] || null;
+      return result.recordset[0] || null;
+    } catch (error) {
+      await this.alertService.sendDatabaseErrorAlert(
+        `Get Service By Name: ${serviceName}`,
+        error as Error
+      );
+      throw error;
+    }
   }
 
   /**
@@ -92,6 +114,14 @@ export class DatabaseService {
         errors++;
         console.error(`Error inserting report for date ${report.date}:`, error);
       }
+    }
+
+    // Send alert if error rate is high (more than 50% failed)
+    if (errors > 0 && errors > reports.length / 2) {
+      await this.alertService.sendDatabaseErrorAlert(
+        `Insert Reports - High Error Rate`,
+        new Error(`${errors} out of ${reports.length} reports failed to insert (${Math.round((errors / reports.length) * 100)}% error rate)`)
+      );
     }
 
     return { inserted, exists, errors };
