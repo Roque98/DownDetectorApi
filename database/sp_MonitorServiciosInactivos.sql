@@ -18,17 +18,20 @@ GO
 CREATE PROCEDURE dbo.MonitorServiciosInactivos
     @TituloGrupoTelegram VARCHAR(1000) = 'Pruebas Angel telegram src',
     @MinutosSinDatos INT = 20,
-    @MinutosEntreAlertas INT = 30  -- Evita enviar alertas duplicadas muy seguidas
+    @MinutosEntreAlertas INT = 30,  -- Evita enviar alertas duplicadas muy seguidas
+    @DiasRetencion INT = 4  -- Dias de retencion de datos historicos
 AS
 BEGIN
     SET NOCOUNT ON;
 
     DECLARE @Ahora DATETIME2 = GETDATE();
     DECLARE @UmbralTiempo DATETIME2 = DATEADD(MINUTE, -@MinutosSinDatos, @Ahora);
+    DECLARE @FechaDepuracion DATETIME2 = DATEADD(DAY, -@DiasRetencion, @Ahora);
     DECLARE @TituloMensaje VARCHAR(50);
     DECLARE @Mensaje VARCHAR(MAX);
     DECLARE @CantidadServiciosInactivos INT = 0;
     DECLARE @ListaServiciosInactivos VARCHAR(MAX) = '';
+    DECLARE @RegistrosDepurados INT = 0;
 
     -- Tabla temporal para almacenar servicios inactivos
     DECLARE @ServiciosInactivos TABLE (
@@ -128,11 +131,36 @@ BEGIN
               CAST(@MinutosSinDatos AS VARCHAR(10)) + ' minutos)';
     END
 
+    -- ============================================
+    -- DEPURACION DE REGISTROS ANTIGUOS
+    -- ============================================
+    BEGIN TRY
+        PRINT 'Iniciando depuracion de registros antiguos...';
+        PRINT 'Fecha limite: ' + CONVERT(VARCHAR(23), @FechaDepuracion, 121);
+
+        -- Eliminar registros mas antiguos que @DiasRetencion dias
+        DELETE FROM Downdetector_Reports
+        WHERE Date < @FechaDepuracion;
+
+        SET @RegistrosDepurados = @@ROWCOUNT;
+
+        PRINT 'Registros depurados: ' + CAST(@RegistrosDepurados AS VARCHAR(10));
+
+    END TRY
+    BEGIN CATCH
+        -- Log de error en depuracion
+        PRINT 'Error durante depuracion de registros: ' + ERROR_MESSAGE();
+        SET @RegistrosDepurados = -1;  -- Indicador de error
+    END CATCH
+
     -- Retornar resumen
     SELECT
         @CantidadServiciosInactivos AS ServiciosInactivos,
         @MinutosSinDatos AS UmbralMinutos,
         @Ahora AS FechaRevision,
+        @RegistrosDepurados AS RegistrosDepurados,
+        @DiasRetencion AS DiasRetencion,
+        @FechaDepuracion AS FechaLimiteDepuracion,
         CASE
             WHEN @CantidadServiciosInactivos > 0 THEN 'Alerta enviada'
             ELSE 'OK - Todos los servicios activos'
