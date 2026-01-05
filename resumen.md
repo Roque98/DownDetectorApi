@@ -17,6 +17,8 @@ Proporcionar monitoreo automatizado en tiempo real de la disponibilidad y estado
 
 - **⚙️ Configuración Flexible:** permite habilitar o deshabilitar servicios de monitoreo según las necesidades del negocio sin intervención técnica, mediante archivo de configuración simple.
 
+- **📧 Sistema de Alertas Automáticas:** notifica al equipo técnico por Telegram cuando ocurren errores críticos, bloqueos de Cloudflare, fallas en base de datos o excepciones no controladas, facilitando respuesta rápida ante incidentes.
+
 ## Deploy
 
 ### Nombre jobs
