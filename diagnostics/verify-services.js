@@ -1,7 +1,9 @@
 /**
  * Service Verification Script
  *
- * Verifies which services from services.config.json are valid on DownDetector
+ * Verifies which ENABLED services from services.config.json are valid on DownDetector
+ * Only checks services with "enabled": true
+ *
  * Usage: node diagnostics/verify-services.js
  */
 
@@ -15,16 +17,29 @@ let services = [];
 
 try {
   const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-  services = config.services || [];
+  const allServices = config.services || [];
+
+  // Filter only enabled services
+  services = allServices.filter(s => s.enabled === true);
+
+  const disabledCount = allServices.length - services.length;
+
+  console.log('='.repeat(60));
+  console.log('DOWNDETECTOR SERVICE VERIFICATION');
+  console.log('='.repeat(60));
+  console.log(`\nTotal services in config: ${allServices.length}`);
+  console.log(`Enabled services: ${services.length}`);
+  console.log(`Disabled services: ${disabledCount} (skipped)\n`);
+
+  if (services.length === 0) {
+    console.log('❌ No enabled services found in configuration!');
+    console.log('💡 Enable services in services.config.json by setting "enabled": true\n');
+    process.exit(0);
+  }
 } catch (error) {
   console.error('❌ Could not load services.config.json:', error.message);
   process.exit(1);
 }
-
-console.log('='.repeat(60));
-console.log('DOWNDETECTOR SERVICE VERIFICATION');
-console.log('='.repeat(60));
-console.log(`\nLoaded ${services.length} service(s) from config\n`);
 
 async function checkService(browser, service, domain) {
   const page = await browser.newPage();

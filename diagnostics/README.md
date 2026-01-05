@@ -25,7 +25,7 @@ Si obtienes errores de "Could not find Chrome" o similar.
 # 1. Verificar que Puppeteer funciona
 npm run diagnose
 
-# 2. Verificar todos los servicios configurados
+# 2. Verificar servicios habilitados (enabled: true)
 npm run diagnose:services
 
 # 3. Capturar HTML de un servicio específico
@@ -51,10 +51,12 @@ npm run diagnose
 npm run diagnose:services
 ```
 
-Este comando revisa todos tus servicios en `services.config.json` y te dice:
+Este comando revisa todos tus servicios **habilitados** (`"enabled": true`) en `services.config.json` y te dice:
 - ✅ Cuáles funcionan correctamente
 - ⚠️ Cuáles existen pero no tienen datos
 - ❌ Cuáles no existen (nombre incorrecto)
+
+**Nota:** Solo verifica servicios habilitados. Los deshabilitados se omiten para ahorra tiempo.
 
 **Si encuentras servicios sin datos o no encontrados:**
 - Lee `EMPTY_DATA.md` para soluciones

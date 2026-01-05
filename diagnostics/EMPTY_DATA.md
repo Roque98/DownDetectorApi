@@ -20,34 +20,50 @@ El problema **NO es de Puppeteer**, sino que:
 
 ## Diagnóstico: Verificar tus servicios
 
-### 1. Verificar todos los servicios configurados
+### 1. Verificar todos los servicios habilitados
 
 ```bash
 npm run diagnose:services
 ```
 
 Este comando:
-- Verifica cada servicio en `services.config.json`
+- Verifica cada servicio **habilitado** (`"enabled": true`) en `services.config.json`
 - Te dice cuáles existen en DownDetector
 - Identifica cuáles tienen datos y cuáles no
 - Guarda un reporte detallado en `diagnostics/output/`
 
+**Nota:** Solo verifica servicios con `"enabled": true`. Los servicios deshabilitados se omiten.
+
 **Ejemplo de salida:**
 
 ```
-✓ Valid (with data):     2
-⚠️  Exists (no data):     1
-❌ Not found:            1
+============================================================
+DOWNDETECTOR SERVICE VERIFICATION
+============================================================
+
+Total services in config: 27
+Enabled services: 5
+Disabled services: 22 (skipped)
+
+🔍 Launching browser...
+
+Checking telegram.com... ⚠️  EXISTS but NO DATA
+Checking whatsapp.com... ✓ OK (192 data points)
+Checking instagram.com... ✓ OK (192 data points)
+
+============================================================
+VERIFICATION RESULTS
+============================================================
+
+📊 SUMMARY:
+   ✓ Valid (with data):     2
+   ⚠️  Exists (no data):     1
+   ❌ Not found:            0
 
 ⚠️  SERVICES WITH NO DATA:
    - telegram (com)
      URL: https://downdetector.com/status/telegram/
      Reason: Service is currently working fine (no problems reported)
-
-❌ SERVICES NOT FOUND:
-   - whatsap (com)  ← typo en el nombre
-     URL: https://downdetector.com/status/whatsap/
-     💡 Check the service name on DownDetector website
 ```
 
 ---
