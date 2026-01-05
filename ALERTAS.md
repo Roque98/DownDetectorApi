@@ -263,3 +263,75 @@ Verificar que:
 - Las credenciales son correctas
 - La base de datos `dbmensajes` existe
 - El usuario tiene permisos de ejecucion en el stored procedure
+
+---
+
+## Monitor de Servicios Inactivos (Stored Procedure)
+
+### Descripcion
+
+Adicionalmente al sistema de alertas integrado en la aplicacion, existe un stored procedure que monitorea servicios que NO estan insertando datos.
+
+**Archivo:** `database/sp_MonitorServiciosInactivos.sql`
+
+### Proposito
+
+Detectar cuando un servicio habilitado NO ha insertado reportes en los ultimos 20 minutos, lo cual puede indicar:
+- La aplicacion no esta corriendo
+- El servicio esta siendo bloqueado por Cloudflare
+- Problemas de conectividad
+- Error en la configuracion del servicio
+
+### Ejecucion
+
+**Programacion recomendada:** Cada 15 minutos en Control-M
+
+**Comando:**
+```sql
+EXEC DowndetectorDB.dbo.MonitorServiciosInactivos
+    @TituloGrupoTelegram = 'Pruebas Angel telegram src',
+    @MinutosSinDatos = 20
+```
+
+### Tipo de Alerta
+
+**Titulo:** `DownDetector - N Servicios Inactivos`
+
+**Mensaje ejemplo:**
+```
+ALERTA: Servicios sin datos recientes
+
+Umbral configurado: 20 minutos
+Fecha de revision: 2026-01-05 10:30:00
+
+Servicios afectados:
+===================
+- telegram (com)
+  Ultimo reporte: 2026-01-05 09:45:00
+  Tiempo sin datos: 45 minutos
+
+Accion requerida:
+- Verificar que la aplicacion DownDetector API este en ejecucion
+- Revisar logs de la aplicacion para errores
+- Verificar conectividad a DownDetector.com
+- Revisar configuracion de servicios habilitados
+```
+
+### Diferencia con Alertas de Aplicacion
+
+| Aspecto | Alertas de Aplicacion | Monitor SP |
+|---------|----------------------|------------|
+| Disparador | Errores durante ejecucion | Ausencia de datos |
+| Cuando detecta | Aplicacion corriendo con errores | Aplicacion NO corriendo o NO insertando |
+| Frecuencia | En tiempo real | Cada 15 min (Control-M) |
+| Ubicacion | Codigo TypeScript | Stored Procedure SQL |
+
+Ambos sistemas son complementarios y cubren diferentes escenarios de falla.
+
+### Documentacion Completa
+
+Ver `database/README_MonitorServiciosInactivos.md` para:
+- Parametros de configuracion
+- Ejemplos de ejecucion
+- Casos especiales
+- Troubleshooting detallado
