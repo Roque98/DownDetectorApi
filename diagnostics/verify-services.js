@@ -131,7 +131,13 @@ async function checkService(browser, service, domain) {
         if (result.hasChartData) {
           console.log(`✓ OK (${result.chartDataCount} data points)`);
         } else {
-          console.log(`⚠️  EXISTS but NO DATA`);
+          // Check if it's Cloudflare blocking
+          if (result.status === 403 ||
+              (result.title && (result.title.includes('Just a moment') || result.title.includes('Checking your browser')))) {
+            console.log(`🚨 CLOUDFLARE BLOCKED (403)`);
+          } else {
+            console.log(`⚠️  EXISTS but NO DATA`);
+          }
         }
       } else {
         console.log(`❌ NOT FOUND`);
@@ -152,9 +158,32 @@ async function checkService(browser, service, domain) {
     console.log(`   ⚠️  Exists (no data):     ${existsNoData.length}`);
     console.log(`   ❌ Not found:            ${notFound.length}`);
 
-    if (existsNoData.length > 0) {
+    // Check for Cloudflare blocking
+    const cloudflareBlocked = results.filter(r =>
+      r.status === 403 ||
+      (r.title && (r.title.includes('Just a moment') || r.title.includes('Checking your browser')))
+    );
+
+    if (cloudflareBlocked.length > 0) {
+      console.log('\n🚨 CLOUDFLARE BLOCKING DETECTED:\n');
+      cloudflareBlocked.forEach(r => {
+        console.log(`   - ${r.service} (${r.domain})`);
+        console.log(`     HTTP Status: ${r.status}`);
+        console.log(`     Title: "${r.title}"`);
+        console.log(`     ⚠️  DownDetector is blocking your requests with Cloudflare`);
+        console.log(`     💡 Read: diagnostics/CLOUDFLARE_FIX.md for solutions`);
+        console.log('');
+      });
+    }
+
+    const existsNoDataNonCloudflare = existsNoData.filter(r =>
+      r.status !== 403 &&
+      (!r.title || (!r.title.includes('Just a moment') && !r.title.includes('Checking your browser')))
+    );
+
+    if (existsNoDataNonCloudflare.length > 0) {
       console.log('\n⚠️  SERVICES WITH NO DATA:\n');
-      existsNoData.forEach(r => {
+      existsNoDataNonCloudflare.forEach(r => {
         console.log(`   - ${r.service} (${r.domain})`);
         console.log(`     URL: ${r.url}`);
         if (r.noProblems) {

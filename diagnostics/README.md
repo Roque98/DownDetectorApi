@@ -2,7 +2,17 @@
 
 ## Problemas comunes
 
-### Problema 1: Devuelve datos vacíos `[]`
+### Problema 1: HTTP 403 - Cloudflare bloqueando
+
+Si obtienes:
+```
+🚨 CLOUDFLARE BLOCKED (403)
+Title: "Just a moment..."
+```
+
+**Lee:** `CLOUDFLARE_FIX.md` - DownDetector está bloqueando tu servidor con Cloudflare.
+
+### Problema 2: Devuelve datos vacíos `[]`
 
 Si obtienes:
 ```json
@@ -11,7 +21,7 @@ Si obtienes:
 
 **Lee:** `EMPTY_DATA.md` - El problema es el **nombre del servicio** o DownDetector cambió su estructura.
 
-### Problema 2: Error de Puppeteer / No funciona en el servidor
+### Problema 3: Error de Puppeteer / No funciona en el servidor
 
 Si obtienes errores de "Could not find Chrome" o similar.
 
@@ -64,6 +74,7 @@ Este comando revisa todos tus servicios **habilitados** (`"enabled": true`) en `
 ### Paso 3: Aplicar la solución
 
 Sigue las instrucciones del archivo correspondiente:
+- **CLOUDFLARE_FIX.md** - Solución para HTTP 403 / Cloudflare
 - **EMPTY_DATA.md** - Corregir nombres de servicios
 - **TROUBLESHOOTING.md** - Arreglar Puppeteer
 - **PUPPETEER_FIX.md** - Fix rápido de configuración
@@ -75,7 +86,8 @@ Sigue las instrucciones del archivo correspondiente:
 | Archivo | Descripción |
 |---------|-------------|
 | `README.md` | Este archivo - Guía de inicio |
-| `EMPTY_DATA.md` | **Solución para datos vacíos** - Corregir nombres de servicios |
+| `CLOUDFLARE_FIX.md` | **Solución para HTTP 403** - Bypasear bloqueo de Cloudflare |
+| `EMPTY_DATA.md` | Solución para datos vacíos - Corregir nombres de servicios |
 | `TROUBLESHOOTING.md` | Solución para problemas de Puppeteer |
 | `PUPPETEER_FIX.md` | Fix rápido de configuración Puppeteer |
 | `puppeteer-test.js` | Script: Verificar que Puppeteer funciona |
