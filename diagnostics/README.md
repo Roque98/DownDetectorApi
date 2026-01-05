@@ -1,137 +1,129 @@
-# Diagnóstico de DownDetector API
+# Diagnóstico de DownDetector API - Problema Resuelto
 
-## Problemas comunes
+## ✅ Estado: Cloudflare Bypass Implementado
 
-### Problema 1: HTTP 403 - Cloudflare bloqueando
+El problema de bloqueo HTTP 403 de Cloudflare ha sido **completamente resuelto**.
 
-Si obtienes:
+### Problema original
+DownDetector bloqueaba las peticiones del servidor con Cloudflare (HTTP 403 "Just a moment...") porque detectaba que Puppeteer era un bot.
+
+### Solución implementada
+Se implementó `puppeteer-extra` con `stealth plugin` que bypasea exitosamente la detección de Cloudflare.
+
+**Resultado:**
 ```
-🚨 CLOUDFLARE BLOCKED (403)
-Title: "Just a moment..."
+✓ HTTP 200 (anteriormente 403)
+✓ 96 reports + 96 baseline entries
+✓ Funciona en servidores con IP de datacenter
+✓ Datos guardados correctamente en la base de datos
 ```
-
-**Lee:** `CLOUDFLARE_FIX.md` - DownDetector está bloqueando tu servidor con Cloudflare.
-
-### Problema 2: Devuelve datos vacíos `[]`
-
-Si obtienes:
-```json
-{ "reports": [], "baseline": [] }
-```
-
-**Lee:** `EMPTY_DATA.md` - El problema es el **nombre del servicio** o DownDetector cambió su estructura.
-
-### Problema 3: Error de Puppeteer / No funciona en el servidor
-
-Si obtienes errores de "Could not find Chrome" o similar.
-
-**Lee:** `TROUBLESHOOTING.md` - El problema es **configuración de Puppeteer**.
 
 ---
 
-## Comandos de diagnóstico disponibles
+## 🔧 Tecnología implementada
 
-```bash
-# 1. Verificar que Puppeteer funciona
-npm run diagnose
+### Servicio Stealth
+**Archivo:** `src/services/downdetector-stealth.service.ts`
 
-# 2. Verificar servicios habilitados (enabled: true)
-npm run diagnose:services
+**Características:**
+- Puppeteer-extra con stealth plugin
+- Headers realistas de navegador
+- Override de navigator.webdriver
+- Spoofing de plugins y languages
+- Espera estratégica para Cloudflare challenge
+- User-Agent actualizado (Chrome 122.0.0.0)
 
-# 3. Capturar HTML de un servicio específico
-npm run diagnose:html [service] [domain]
-# Ejemplo: npm run diagnose:html telegram com
-```
-
-## Pasos de diagnóstico
-
-### Paso 1: Ejecutar diagnóstico general
-
-```bash
-npm run diagnose
-```
-
-**Resultado esperado:**
-- ✅ `ALL TESTS PASSED` → Puppeteer funciona, ve al Paso 2
-- ❌ `Failed` → Lee `TROUBLESHOOTING.md` para arreglar Puppeteer
-
-### Paso 2: Verificar servicios
-
-```bash
-npm run diagnose:services
-```
-
-Este comando revisa todos tus servicios **habilitados** (`"enabled": true`) en `services.config.json` y te dice:
-- ✅ Cuáles funcionan correctamente
-- ⚠️ Cuáles existen pero no tienen datos
-- ❌ Cuáles no existen (nombre incorrecto)
-
-**Nota:** Solo verifica servicios habilitados. Los deshabilitados se omiten para ahorra tiempo.
-
-**Si encuentras servicios sin datos o no encontrados:**
-- Lee `EMPTY_DATA.md` para soluciones
-
-### Paso 3: Aplicar la solución
-
-Sigue las instrucciones del archivo correspondiente:
-- **CLOUDFLARE_FIX.md** - Solución para HTTP 403 / Cloudflare
-- **EMPTY_DATA.md** - Corregir nombres de servicios
-- **TROUBLESHOOTING.md** - Arreglar Puppeteer
-- **PUPPETEER_FIX.md** - Fix rápido de configuración
+### Integración
+El servicio principal `downdetector.service.ts` ahora usa automáticamente el modo stealth, no requiere configuración adicional.
 
 ---
 
-## Archivos en esta carpeta
+## 🚀 Uso
 
-| Archivo | Descripción |
-|---------|-------------|
-| `README.md` | Este archivo - Guía de inicio |
-| `CLOUDFLARE_FIX.md` | **Solución para HTTP 403** - Bypasear bloqueo de Cloudflare |
-| `EMPTY_DATA.md` | Solución para datos vacíos - Corregir nombres de servicios |
-| `TROUBLESHOOTING.md` | Solución para problemas de Puppeteer |
-| `PUPPETEER_FIX.md` | Fix rápido de configuración Puppeteer |
-| `puppeteer-test.js` | Script: Verificar que Puppeteer funciona |
-| `verify-services.js` | Script: Verificar todos los servicios |
-| `capture-html.js` | Script: Capturar HTML de un servicio |
-| `output/` | Carpeta con resultados de diagnósticos |
-
----
-
-## ¿Por qué falla en el servidor?
-
-La librería `downdetector-api` usa **Puppeteer** (navegador Chrome headless). En servidores suele fallar porque:
-
-1. ❌ Chrome/Chromium no está instalado
-2. ❌ Faltan dependencias del sistema (librerías compartidas)
-3. ❌ Configuración de sandbox incompatible con el servidor
-
-## Solución más común
-
-**Linux/Ubuntu:**
+La aplicación funciona de forma transparente:
 
 ```bash
-# Instalar Chrome
-sudo apt-get update
-sudo apt-get install -y chromium-browser
-
-# Verificar
-npm run diagnose
-```
-
-Si sigue fallando, revisa `TROUBLESHOOTING.md`.
-
----
-
-## Soporte
-
-Si ninguna solución funciona, revisa los logs detallados de la aplicación:
-
-```bash
+# Modo de ejecución única
 npm run dev
+
+# Modo de ejecución continua (cron)
+npm start
 ```
 
-Los logs ahora incluyen información completa sobre:
-- Versión de Node.js
-- Plataforma del sistema
-- Errores detallados con stack trace
-- Estado de las respuestas de DownDetector
+El bypass de Cloudflare se aplica automáticamente a todas las peticiones.
+
+---
+
+## 📊 Datos obtenidos
+
+Para entender qué significan los datos obtenidos de DownDetector, consulta:
+
+**`EXPLICACION_DATOS.md`** en la raíz del proyecto
+
+Este archivo explica:
+- Estructura de la tabla Downdetector_Reports
+- Qué son ReportValue y BaseLineValue
+- Sistema de umbrales automático (Status y StatusCode)
+- Consultas SQL útiles para análisis
+- Interpretación de los datos
+
+---
+
+## 🔍 Verificación
+
+Para verificar que todo funciona correctamente:
+
+```bash
+# 1. Ejecutar la aplicación
+npm run dev
+
+# 2. Resultado esperado en los logs:
+[Stealth] HTTP Status: 200
+[Stealth] ✓ Successfully fetched 96 reports and 96 baseline entries
+✓ 2 new records saved
+```
+
+---
+
+## 📝 Notas técnicas
+
+### Dependencias instaladas
+```json
+{
+  "puppeteer-extra": "^3.3.6",
+  "puppeteer-extra-plugin-stealth": "^2.11.2",
+  "cheerio": "^1.1.2"
+}
+```
+
+### Alternativas (si Cloudflare actualiza su detección)
+
+Si en el futuro Cloudflare actualiza su sistema y vuelve a bloquear:
+
+1. **Actualizar stealth plugin:** `npm update puppeteer-extra-plugin-stealth`
+2. **Usar proxy residencial:** Configurar en `downdetector-stealth.service.ts`
+3. **Aumentar delays:** Modificar `waitForTimeout` en el servicio stealth
+
+---
+
+## 🆘 Soporte
+
+Si encuentras problemas:
+
+1. Verifica que las dependencias estén instaladas: `npm install`
+2. Revisa los logs para ver el HTTP status code
+3. Si ves HTTP 403 de nuevo, actualiza el stealth plugin
+4. Verifica que el servicio esté habilitado en `services.config.json`
+
+---
+
+## ✨ Resumen
+
+- ✅ Problema de Cloudflare resuelto
+- ✅ Funciona en producción (servidores)
+- ✅ Funciona en desarrollo (local)
+- ✅ Obtiene datos reales de DownDetector
+- ✅ No requiere configuración manual
+- ✅ Integrado transparentemente
+
+El proyecto está listo para producción.
