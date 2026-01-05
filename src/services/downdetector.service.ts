@@ -1,7 +1,10 @@
-import { downdetector } from 'downdetector-api';
 import { DowndetectorResponse } from '../types';
+import { DowndetectorStealthService } from './downdetector-stealth.service';
 
 export class DowndetectorService {
+  // Use stealth service to bypass Cloudflare
+  private stealthService = new DowndetectorStealthService();
+
   /**
    * Fetch status data from Downdetector for a specific service
    * @param serviceName - Name of the service (e.g., 'telegram', 'whatsapp')
@@ -13,13 +16,12 @@ export class DowndetectorService {
     domain: string = 'com'
   ): Promise<DowndetectorResponse> {
     try {
-      console.log(`[DownDetector] Fetching data for ${serviceName} from downdetector.${domain}...`);
+      console.log(`[DownDetector] Using stealth mode to bypass Cloudflare...`);
       console.log(`[DownDetector] Node version: ${process.version}`);
       console.log(`[DownDetector] Platform: ${process.platform} ${process.arch}`);
 
-      const response = await downdetector(serviceName, domain);
-
-      console.log(`[DownDetector] Response received for ${serviceName}:`, JSON.stringify(response, null, 2));
+      // Use stealth service instead of downdetector-api
+      const response = await this.stealthService.fetchServiceStatus(serviceName, domain);
 
       if (!response) {
         console.error(`[DownDetector] ❌ Response is null or undefined`);
@@ -28,7 +30,6 @@ export class DowndetectorService {
 
       if (!response.reports) {
         console.error(`[DownDetector] ❌ Response missing 'reports' property`);
-        console.error(`[DownDetector] Response keys:`, Object.keys(response));
         throw new Error(`Invalid response structure from Downdetector for ${serviceName}`);
       }
 
@@ -40,7 +41,7 @@ export class DowndetectorService {
         `[DownDetector] ✓ Fetched ${response.reports.length} reports and ${response.baseline?.length || 0} baseline entries for ${serviceName}`
       );
 
-      return response as DowndetectorResponse;
+      return response;
     } catch (error) {
       console.error(`[DownDetector] ❌ Error fetching data for ${serviceName}:`);
       console.error(`[DownDetector] Error type: ${error?.constructor?.name}`);
@@ -48,14 +49,6 @@ export class DowndetectorService {
 
       if (error instanceof Error && error.stack) {
         console.error(`[DownDetector] Stack trace:`, error.stack);
-      }
-
-      // Log additional error details if available
-      if (error && typeof error === 'object') {
-        const errorDetails = Object.keys(error).filter(key => key !== 'stack');
-        if (errorDetails.length > 0) {
-          console.error(`[DownDetector] Error details:`, JSON.stringify(error, errorDetails, 2));
-        }
       }
 
       throw new Error(
@@ -72,27 +65,7 @@ export class DowndetectorService {
   async fetchMultipleServices(
     services: Array<{ name: string; domain: string }>
   ): Promise<Array<{ serviceName: string; data: DowndetectorResponse | null; error: string | null }>> {
-    const results = await Promise.allSettled(
-      services.map(async (service) => {
-        const data = await this.fetchServiceStatus(service.name, service.domain);
-        return {
-          serviceName: service.name,
-          data,
-          error: null,
-        };
-      })
-    );
-
-    return results.map((result, index) => {
-      if (result.status === 'fulfilled') {
-        return result.value;
-      } else {
-        return {
-          serviceName: services[index].name,
-          data: null,
-          error: result.reason instanceof Error ? result.reason.message : 'Unknown error',
-        };
-      }
-    });
+    // Use stealth service for multiple services
+    return this.stealthService.fetchMultipleServices(services);
   }
 }
