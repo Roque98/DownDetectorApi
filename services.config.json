@@ -1,0 +1,166 @@
+{
+  "services": [
+    {
+      "name": "telegram",
+      "domain": "com",
+      "enabled": true,
+      "category": "messaging"
+    },
+    {
+      "name": "whatsapp",
+      "domain": "com",
+      "enabled": false,
+      "category": "messaging"
+    },
+    {
+      "name": "instagram",
+      "domain": "com",
+      "enabled": false,
+      "category": "social-media"
+    },
+    {
+      "name": "facebook",
+      "domain": "com",
+      "enabled": false,
+      "category": "social-media"
+    },
+    {
+      "name": "twitter",
+      "domain": "com",
+      "enabled": false,
+      "category": "social-media"
+    },
+    {
+      "name": "tiktok",
+      "domain": "com",
+      "enabled": false,
+      "category": "social-media"
+    },
+    {
+      "name": "gmail",
+      "domain": "com",
+      "enabled": false,
+      "category": "email"
+    },
+    {
+      "name": "outlook",
+      "domain": "com",
+      "enabled": false,
+      "category": "email"
+    },
+    {
+      "name": "youtube",
+      "domain": "com",
+      "enabled": false,
+      "category": "streaming"
+    },
+    {
+      "name": "netflix",
+      "domain": "com",
+      "enabled": false,
+      "category": "streaming"
+    },
+    {
+      "name": "spotify",
+      "domain": "com",
+      "enabled": false,
+      "category": "streaming"
+    },
+    {
+      "name": "twitch",
+      "domain": "com",
+      "enabled": false,
+      "category": "streaming"
+    },
+    {
+      "name": "discord",
+      "domain": "com",
+      "enabled": false,
+      "category": "messaging"
+    },
+    {
+      "name": "steam",
+      "domain": "com",
+      "enabled": false,
+      "category": "gaming"
+    },
+    {
+      "name": "playstation-network",
+      "domain": "com",
+      "enabled": false,
+      "category": "gaming"
+    },
+    {
+      "name": "xbox-live",
+      "domain": "com",
+      "enabled": false,
+      "category": "gaming"
+    },
+    {
+      "name": "amazon",
+      "domain": "com",
+      "enabled": false,
+      "category": "ecommerce"
+    },
+    {
+      "name": "ebay",
+      "domain": "com",
+      "enabled": false,
+      "category": "ecommerce"
+    },
+    {
+      "name": "paypal",
+      "domain": "com",
+      "enabled": false,
+      "category": "payment"
+    },
+    {
+      "name": "aws",
+      "domain": "com",
+      "enabled": false,
+      "category": "cloud"
+    },
+    {
+      "name": "google-cloud",
+      "domain": "com",
+      "enabled": false,
+      "category": "cloud"
+    },
+    {
+      "name": "microsoft-365",
+      "domain": "com",
+      "enabled": false,
+      "category": "saas"
+    },
+    {
+      "name": "zoom",
+      "domain": "com",
+      "enabled": false,
+      "category": "saas"
+    },
+    {
+      "name": "slack",
+      "domain": "com",
+      "enabled": false,
+      "category": "saas"
+    },
+    {
+      "name": "dropbox",
+      "domain": "com",
+      "enabled": false,
+      "category": "cloud"
+    },
+    {
+      "name": "github",
+      "domain": "com",
+      "enabled": false,
+      "category": "developer"
+    },
+    {
+      "name": "cloudflare",
+      "domain": "com",
+      "enabled": false,
+      "category": "infrastructure"
+    }
+  ]
+}

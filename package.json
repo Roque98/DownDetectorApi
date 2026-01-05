@@ -1,0 +1,34 @@
+{
+  "name": "downdetectorapi",
+  "version": "1.0.0",
+  "description": "Integration of downdetector-api with SQL Server",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "watch": "tsc --watch"
+  },
+  "keywords": [
+    "downdetector",
+    "sql-server",
+    "monitoring"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "downdetector-api": "^2.1.0",
+    "express": "^5.2.1",
+    "mssql": "^12.2.0",
+    "node-cron": "^4.2.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/mssql": "^9.1.8",
+    "@types/node": "^25.0.3",
+    "@types/node-cron": "^3.0.11",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}
