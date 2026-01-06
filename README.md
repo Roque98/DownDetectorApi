@@ -52,8 +52,8 @@ Sistema de monitoreo automatizado en tiempo real de la disponibilidad y estado d
 ### 1. Clonar el repositorio
 
 ```bash
-git clone https://github.com/Roque98/DownDetectorApi.git
-cd DownDetectorApi
+git clone http://10.53.34.114:8080/tfs/Automatizacion%20y%20Analisis/_git/Proceso%20-%20DownDetectorApi
+cd Proceso%20-%20DownDetectorApi
 ```
 
 ### 2. Instalar dependencias
@@ -542,5 +542,5 @@ ISC
 
 ## Créditos
 
-- **Repositorio:** [https://github.com/Roque98/DownDetectorApi.git](https://github.com/Roque98/DownDetectorApi.git)
+- **Repositorio:** [http://10.53.34.114:8080/tfs/Automatizacion%20y%20Analisis/_git/Proceso%20-%20DownDetectorApi](http://10.53.34.114:8080/tfs/Automatizacion%20y%20Analisis/_git/Proceso%20-%20DownDetectorApi)
 - **Librería base:** [downdetector-api](https://github.com/DavideViolante/downdetector-api) - API no oficial de Downdetector

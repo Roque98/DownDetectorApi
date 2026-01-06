@@ -46,7 +46,7 @@ Proporcionar monitoreo automatizado en tiempo real de la disponibilidad y estado
 - **monitoreos.dbo.MonitorServiciosInactivos:** Monitoreo de servicios sin datos recientes y depuración automática de registros antiguos
 
 ## Enlaces externos
-- **Repositorio GitHub:** [https://github.com/Roque98/DownDetectorApi.git](https://github.com/Roque98/DownDetectorApi.git)
+- **Repositorio TFS:** [http://10.53.34.114:8080/tfs/Automatizacion%20y%20Analisis/_git/Proceso%20-%20DownDetectorApi](http://10.53.34.114:8080/tfs/Automatizacion%20y%20Analisis/_git/Proceso%20-%20DownDetectorApi)
 - **Documentación Técnica:** [README.md](README.md)
 - **Guía de Datos:** [EXPLICACION_DATOS.md](EXPLICACION_DATOS.md)
 - **Configuración:** [CONFIGURACION_FINAL.md](CONFIGURACION_FINAL.md)
