@@ -22,19 +22,19 @@ Proporcionar monitoreo automatizado en tiempo real de la disponibilidad y estado
 ## Deploy
 
 ### Nombre jobs
--
+- Nombre task scheduler: Downdetector_API
 
 ### Servidores
--
+- 10.118.24.87
 
 ### Ruta
--
+- D:\b1065129\Proyectos\git\DownDetectorApi\start-dev.bat
 
 ## Documentación BD
 
 ### Instancia
-- **Servidor:** SQL Server (configurado según ambiente)
-- **Base de datos:** DownDetectorDB
+- **Servidor:** 10.118.26.88
+- **Base de datos:** Monitoreos
 
 ### Tablas
 - **monitoreos.dbo.Downdetector_Services:** Catálogo de servicios monitoreados con configuración de habilitación/deshabilitación
