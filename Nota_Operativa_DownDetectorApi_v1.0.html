@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+    <meta charset="UTF-8">
+    <meta name="ProgId" content="Word.Document">
+    <meta name="Generator" content="Microsoft Word">
+    <meta name="Originator" content="Microsoft Word">
+    <title>Nota Operativa - DownDetector API v1.0</title>
+    <style>
+        /* Estilos base compatibles con Word */
+        body {
+            font-family: Calibri, Arial, sans-serif;
+            font-size: 11pt;
+            line-height: 1.5;
+            margin: 1in;
+            color: #000000;
+        }
+
+        h1 {
+            font-size: 22pt;
+            font-weight: bold;
+            color: #1F4E78;
+            margin-top: 24pt;
+            margin-bottom: 12pt;
+            page-break-after: avoid;
+        }
+
+        h2 {
+            font-size: 16pt;
+            font-weight: bold;
+            color: #2E75B5;
+            margin-top: 18pt;
+            margin-bottom: 10pt;
+            page-break-after: avoid;
+        }
+
+        h3 {
+            font-size: 13pt;
+            font-weight: bold;
+            color: #1F4E78;
+            margin-top: 12pt;
+            margin-bottom: 6pt;
+            page-break-after: avoid;
+        }
+
+        p {
+            margin-top: 0pt;
+            margin-bottom: 10pt;
+            text-align: justify;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 10pt;
+            margin-bottom: 10pt;
+        }
+
+        th {
+            background-color: #4472C4;
+            color: white;
+            font-weight: bold;
+            padding: 8pt;
+            border: 1pt solid #2E5C8A;
+            text-align: left;
+        }
+
+        td {
+            padding: 6pt;
+            border: 1pt solid #D0D0D0;
+            vertical-align: top;
+        }
+
+        tr:nth-child(even) {
+            background-color: #F2F2F2;
+        }
+
+        ul, ol {
+            margin-top: 6pt;
+            margin-bottom: 10pt;
+        }
+
+        li {
+            margin-bottom: 4pt;
+        }
+
+        code {
+            font-family: Consolas, 'Courier New', monospace;
+            background-color: #F5F5F5;
+            padding: 2pt 4pt;
+            border: 1pt solid #E0E0E0;
+            font-size: 10pt;
+        }
+
+        .metadata {
+            background-color: #E7E6E6;
+            padding: 12pt;
+            margin-bottom: 20pt;
+            border-left: 4pt solid #4472C4;
+        }
+
+        .highlight {
+            background-color: #FFF2CC;
+            padding: 8pt;
+            border-left: 3pt solid #F4B400;
+            margin: 10pt 0;
+        }
+
+        .important {
+            background-color: #FCE4EC;
+            padding: 8pt;
+            border-left: 3pt solid #E91E63;
+            margin: 10pt 0;
+        }
+
+        .emoji {
+            font-size: 14pt;
+        }
+
+        .code-block {
+            font-family: Consolas, 'Courier New', monospace;
+            background-color: #F8F8F8;
+            padding: 10pt;
+            border: 1pt solid #CCCCCC;
+            margin: 10pt 0;
+            white-space: pre-wrap;
+            font-size: 9pt;
+        }
+
+        .status-normal { color: #28A745; font-weight: bold; }
+        .status-atencion { color: #28A745; font-weight: bold; }
+        .status-alerta { color: #28A745; font-weight: bold; }
+        .status-critico { color: #FFC107; font-weight: bold; }
+        .status-emergencia { color: #F44336; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<!-- ============================================= -->
+<!-- SECCIÓN 1: ENCABEZADO Y METADATOS -->
+<!-- ============================================= -->
+
+<h1>Nota Operativa - DownDetector API</h1>
+
+<div class="metadata">
+    <p><strong>Versión:</strong> 1.0</p>
+    <p><strong>Fecha de creación:</strong> 06 de enero de 2026</p>
+    <p><strong>Audiencia objetivo:</strong> Centro de Operaciones (NOC)</p>
+    <p><strong>Nivel de criticidad:</strong> Media</p>
+    <p><strong>Sistema:</strong> DownDetector API - Sistema de Monitoreo de Disponibilidad de Servicios</p>
+    <p><strong>Última actualización:</strong> 06 de enero de 2026</p>
+</div>
+
+<!-- ============================================= -->
+<!-- SECCIÓN 2: OBJETIVO Y PROPÓSITO -->
+<!-- ============================================= -->
+
+<h2><span class="emoji">🎯</span> Objetivo y Propósito</h2>
+
+<p>Esta nota operativa tiene como objetivo proporcionar al Centro de Operaciones una guía práctica y completa para el monitoreo efectivo del sistema <strong>DownDetector API</strong>. El documento está diseñado para que puedas comprender rápidamente qué es el sistema, cómo interpretarlo y qué acciones tomar ante diferentes situaciones operativas.</p>
+
+<h3>¿Para qué sirve esta herramienta?</h3>
+
+<ul>
+    <li><strong>Detección proactiva de interrupciones:</strong> Identifica problemas en servicios críticos de telecomunicaciones antes de que los usuarios finales escalen incidencias masivas.</li>
+    <li><strong>Monitoreo automatizado 24/7:</strong> Recopila datos cada minuto desde DownDetector.com, proporcionando visibilidad continua del estado de servicios como Telegram, WhatsApp, Instagram y Facebook.</li>
+    <li><strong>Clasificación inteligente de severidad:</strong> Calcula automáticamente el nivel de impacto con 5 niveles (0-2 OK, 3 Warning, 4 Alerta) comparando reportes actuales contra líneas base históricas.</li>
+    <li><strong>Integración con PRTG:</strong> Visualiza métricas clave directamente en PRTG, facilitando la toma de decisiones durante el turno.</li>
+</ul>
+
+<!-- ============================================= -->
+<!-- SECCIÓN 3: SECCIÓN CONCEPTUAL -->
+<!-- ============================================= -->
+
+<h2><span class="emoji">🔍</span> ¿Qué es DownDetector API?</h2>
+
+<p>DownDetector API es un <strong>sistema de monitoreo automatizado</strong> que funciona como un "termómetro digital" para servicios de telecomunicaciones críticos. Imagina que tienes un panel de control que te muestra en tiempo real cuántas personas están reportando problemas con servicios como Telegram o WhatsApp.</p>
+
+<p>El sistema opera de forma autónoma: cada minuto consulta la plataforma DownDetector.com (un sitio web donde usuarios reportan fallas en servicios populares), extrae estadísticas de reportes, las compara contra valores normales y almacena todo en una base de datos SQL Server para enviarlos a PRTG. Lo interesante es que el sistema <strong>calcula automáticamente si la situación es normal o requiere atención</strong>, clasificándola en 5 niveles de severidad.</p>
+
+<h3>Conceptos Básicos que Debes Conocer</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th>Concepto</th>
+            <th>Definición Simple</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>ReportValue (Reportes)</strong></td>
+            <td>Número de usuarios que están reportando problemas con un servicio en este momento. Es como contar cuántas personas llaman a soporte simultáneamente.</td>
+        </tr>
+        <tr>
+            <td><strong>BaseLineValue (Línea Base)</strong></td>
+            <td>Valor normal o esperado de reportes en condiciones normales. Es tu "referencia" para saber si algo está fuera de lo común.</td>
+        </tr>
+        <tr>
+            <td><strong>Multiplicador</strong></td>
+            <td>Cuántas veces más reportes hay ahora comparado con lo normal. Ejemplo: si la línea base es 100 y hay 500 reportes, el multiplicador es 5x.</td>
+        </tr>
+        <tr>
+            <td><strong>StatusCode (Código de Estado)</strong></td>
+            <td>Número del 0 al 4 que indica la severidad: 0-2 = OK, 3 = Warning, 4 = Alerta. Es como un semáforo con 5 niveles de granularidad.</td>
+        </tr>
+        <tr>
+            <td><strong>Sensor PRTG</strong></td>
+            <td>Componente visual en PRTG que muestra gráficos con los datos del sistema.</td>
+        </tr>
+    </tbody>
+</table>
+
+<p><strong>Analogía práctica:</strong> Piensa en DownDetector API como un sistema de vigilancia de tráfico vehicular. La "Línea Base" es el tráfico normal a determinada hora. Los "Reportes" son el número actual de autos en la vía. Si hay 5 veces más autos de lo normal (multiplicador 5x), el sistema marca la situación como "Alerta" y te notifica que hay congestión.</p>
+
+<!-- ============================================= -->
+<!-- SECCIÓN 4: CLASIFICACIÓN/TIPOS -->
+<!-- ============================================= -->
+
+<h2><span class="emoji">📊</span> Clasificación de Estados del Sistema</h2>
+
+<p>El sistema clasifica automáticamente cada medición en cinco estados según el multiplicador (ratio entre reportes actuales y línea base de 1). <strong>Solo los StatusCode 3 y 4 generan alertas en PRTG.</strong></p>
+
+<h3><span class="status-normal">✅ ESTADOS OK (StatusCode: 0, 1, 2)</span></h3>
+
+<p><strong>¿Qué significa?</strong><br>
+Estados normales de operación que NO requieren escalamiento. Multiplicador menor a 10x (menos de 10 reportes con línea base de 1). <strong>Se muestran en VERDE en PRTG.</strong></p>
+
+<p><strong>¿Qué hacer?</strong></p>
+<ul>
+    <li><strong>StatusCode 0 (NORMAL):</strong> 0-1 reportes, multiplicador &lt;2x. Ninguna acción requerida.</li>
+    <li><strong>StatusCode 1 (NORMAL):</strong> 2-4 reportes, multiplicador 2x-5x. Monitoreo de rutina.</li>
+    <li><strong>StatusCode 2 (NORMAL):</strong> 5-9 reportes, multiplicador 5x-10x. Observar tendencia, documentar si persiste.</li>
+</ul>
+
+<p><strong>Ejemplos:</strong></p>
+<ul>
+    <li>Línea Base: 1 → Reportes: 1 → <span class="status-normal">NORMAL</span></li>
+    <li>Línea Base: 1 → Reportes: 3 → <span class="status-normal">NORMAL</span></li>
+    <li>Línea Base: 1 → Reportes: 8 → <span class="status-normal">NORMAL</span></li>
+</ul>
+
+<h3><span class="status-critico">⚠️ WARNING (StatusCode: 3)</span></h3>
+
+<p><strong>¿Qué significa?</strong><br>
+Multiplicador 10x-20x. Entre 10 y 20 reportes simultáneos. <strong>Se muestra en AMARILLO en PRTG.</strong></p>
+
+<p><strong>¿Qué hacer?</strong></p>
+<ul>
+    <li>Verificar impacto interno: revisar si hay problemas de envío de mensajes Telegram, alertas Telegram encoladas, o respuestas no enviadas en bots Telegram</li>
+    <li>Notificar al supervisor de turno sobre la situación y el impacto identificado</li>
+</ul>
+
+<p><strong>Ejemplo:</strong> Línea Base: 1 → Reportes: 15 → <span class="status-critico">WARNING</span></p>
+
+<h3><span class="status-emergencia">🚨 ALERTA (StatusCode: 4)</span></h3>
+
+<p><strong>¿Qué significa?</strong><br>
+Multiplicador ≥ 20x. Más de 20 reportes simultáneos. <strong>Se muestra en ROJO en PRTG.</strong> Situación crítica con problema real y significativo.</p>
+
+<p><strong>¿Qué hacer?</strong></p>
+<ul>
+    <li><strong>VERIFICACIÓN INMEDIATA:</strong> Revisar urgentemente problemas de envío de mensajes Telegram, alertas Telegram encoladas, y respuestas no enviadas en bots Telegram</li>
+    <li><strong>ESCALAMIENTO INMEDIATO:</strong> Notificar al supervisor de turno</li>
+</ul>
+
+<p><strong>Ejemplo:</strong> Línea Base: 1 → Reportes: 25+ → <span class="status-emergencia">ALERTA</span></p>
+
+<!-- ============================================= -->
+<!-- SECCIÓN 5: CRITERIOS TÉCNICOS -->
+<!-- ============================================= -->
+
+<h2><span class="emoji">📏</span> Criterios de Activación y Umbrales</h2>
+
+<p>El sistema utiliza fórmulas matemáticas automáticas para determinar el estado de cada servicio. Comprender estos criterios te ayuda a interpretar correctamente las alertas y a anticipar cambios de estado.</p>
+
+<h3>Fórmula de Cálculo del Multiplicador</h3>
+
+<div class="code-block">Multiplicador = ReportValue / BaseLineValue
+
+Ejemplo práctico:
+- Reportes actuales (ReportValue): 8
+- Línea base (BaseLineValue): 1
+- Multiplicador = 8 / 1 = 8x
+- RESULTADO: Estado ALERTA (porque 8x está entre 5x y 10x)</div>
+
+<h3>Tabla de Umbrales Técnicos</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th>StatusCode</th>
+            <th>Estado</th>
+            <th>Rango del Multiplicador</th>
+            <th>Descripción Técnica</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>-1</td>
+            <td>SIN_BASELINE</td>
+            <td>BaseLineValue = 0</td>
+            <td>No hay datos de referencia históricos. Situación excepcional que requiere investigación.</td>
+        </tr>
+        <tr>
+            <td>0</td>
+            <td class="status-normal">NORMAL</td>
+            <td>Multiplicador &lt; 2.0</td>
+            <td>Estado OK. Operación normal. Reportes dentro del rango esperado.</td>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td class="status-normal">NORMAL</td>
+            <td>2.0 ≤ Multiplicador &lt; 5.0</td>
+            <td>Estado OK. Incremento leve que requiere observación de rutina.</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td class="status-normal">NORMAL</td>
+            <td>5.0 ≤ Multiplicador &lt; 10.0</td>
+            <td>Estado OK. Incremento notable pero no crítico (línea base típica = 1).</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td class="status-critico">WARNING</td>
+            <td>10.0 ≤ Multiplicador &lt; 20.0</td>
+            <td>Estado WARNING. Advertencia de posible problema (10-20 reportes con línea base = 1).</td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td class="status-emergencia">ALERTA</td>
+            <td>Multiplicador ≥ 20.0</td>
+            <td>Estado ALERTA. Situación crítica que requiere atención inmediata (20+ reportes).</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>Criterios de Validez de Datos</h3>
+
+<div class="important">
+    <p><strong>IMPORTANTE:</strong> Los sensores PRTG solo consideran datos válidos si no tienen más de <strong>20 minutos de antigüedad</strong>. Este umbral se define así porque DownDetector tiene un delay natural de aproximadamente 15 minutos en la actualización de sus datos, por lo que esperar hasta 20 minutos garantiza que se capturen los datos más recientes disponibles. Si ves que un sensor muestra "No Data", significa que el proceso de recolección no ha actualizado datos recientemente y requiere investigación.</p>
+</div>
+
+<p><strong>Indicadores de frescura de datos:</strong></p>
+<ul>
+    <li><strong>MinutosDesdeReporte:</strong> Muestra la antigüedad del último dato disponible</li>
+    <li><strong>Datos Frescos:</strong> Última actualización hace menos de 20 minutos - Operación normal</li>
+    <li><strong>Datos Obsoletos:</strong> Última actualización hace más de 20 minutos - Verificar estado del proceso de recolección</li>
+</ul>
+
+<!-- ============================================= -->
+<!-- SECCIÓN 6: INTERFAZ/NAVEGACIÓN -->
+<!-- ============================================= -->
+
+<h2><span class="emoji">🖥️</span> Interfaz del Sensor PRTG</h2>
+
+<h3>Canales que Visualizarás</h3>
+
+<p>Cada sensor PRTG muestra múltiples canales con las siguientes métricas:</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Canal</th>
+            <th>Qué Representa</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Reportes</strong></td>
+            <td>Número actual de usuarios reportando problemas con el servicio. Indica la magnitud absoluta de reportes en este momento.</td>
+        </tr>
+        <tr>
+            <td><strong>LineaBase</strong></td>
+            <td>Valor de referencia normal para el servicio. Regularmente este valor es 1, lo que significa que en condiciones normales hay 1 reporte base.</td>
+        </tr>
+        <tr>
+            <td><strong>CodigoEstado</strong></td>
+            <td>Número del 0 al 4 que indica la severidad: 0-2 = OK (verde), 3 = Warning (amarillo), 4 = Alerta (rojo).</td>
+        </tr>
+        <tr>
+            <td><strong>Multiplicador</strong></td>
+            <td>Cuántas veces más reportes hay ahora comparado con la línea base. Ejemplo: si hay 15 reportes y la línea base es 1, el multiplicador es 15x.</td>
+        </tr>
+        <tr>
+            <td><strong>EnAlerta</strong></td>
+            <td>Indicador binario que activa notificaciones: 1 = el servicio está en WARNING o ALERTA (StatusCode 3 o 4), 0 = estados OK (StatusCode 0, 1 o 2).</td>
+        </tr>
+    </tbody>
+</table>
+
+<!-- ============================================= -->
+<!-- SECCIÓN 7: COMPORTAMIENTO DINÁMICO -->
+<!-- ============================================= -->
+
+<h2><span class="emoji">🔄</span> Ciclo de Vida del Monitoreo</h2>
+
+<p>El sistema opera en un ciclo continuo automatizado. Comprender este flujo te ayuda a anticipar cuándo esperar datos actualizados y a detectar anomalías en el proceso.</p>
+
+<h3>Proceso de Recolección y Análisis</h3>
+
+<ol>
+    <li><strong>Recolección Automática (cada 1 minuto):</strong> El sistema inicia un ciclo de recolección automática, consultando DownDetector.com para obtener información actualizada de estado de los servicios.</li>
+
+    <li><strong>Extracción de Datos:</strong> Se extraen los datos históricos de reportes de usuarios y valores de línea base desde DownDetector.</li>
+
+    <li><strong>Filtrado Temporal:</strong> Solo se procesan datos recientes (últimos 45 minutos) para evitar insertar información antigua o duplicada.</li>
+
+    <li><strong>Conversión de Zona Horaria:</strong> Las fechas se convierten automáticamente a hora local antes de almacenarse.</li>
+
+    <li><strong>Almacenamiento en Base de Datos:</strong> Los datos recolectados se guardan en la base de datos central del sistema.</li>
+
+    <li><strong>Cálculo Automático de Estado:</strong> El sistema calcula el multiplicador y asigna el StatusCode automáticamente según los umbrales definidos. Si el registro ya existe, no se duplica.</li>
+
+    <li><strong>Disponibilidad para PRTG:</strong> Una vez almacenados los datos, los sensores PRTG pueden visualizarlos. PRTG consulta según su intervalo configurado (recomendado: cada 5 minutos).</li>
+
+    <li><strong>Notificaciones Automáticas:</strong> Si ocurren errores críticos durante el proceso de recolección, el sistema envía alertas por Telegram al grupo de monitoreo.</li>
+</ol>
+
+<h3>Estados del Sistema de Recolección</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th>Estado</th>
+            <th>Descripción</th>
+            <th>Qué esperar</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Operación Normal</strong></td>
+            <td>El proceso está corriendo correctamente y actualizando datos cada 1 minuto</td>
+            <td>Los sensores PRTG muestran datos frescos (menos de 20 minutos de antigüedad). No hay alertas de sistema.</td>
+        </tr>
+        <tr>
+            <td><strong>Bloqueo de Origen</strong></td>
+            <td>DownDetector.com ha bloqueado temporalmente las consultas automatizadas</td>
+            <td>Recibirás alerta de Telegram sobre el bloqueo. Los datos dejarán de actualizarse. El sistema reintenta automáticamente en el próximo ciclo.</td>
+        </tr>
+        <tr>
+            <td><strong>Error de Base de Datos</strong></td>
+            <td>Falla de conexión o error en operaciones de base de datos</td>
+            <td>Alerta de Telegram con detalles del error. Datos no se almacenan. Verificar conectividad con el servidor de base de datos.</td>
+        </tr>
+        <tr>
+            <td><strong>Proceso Detenido</strong></td>
+            <td>El proceso de recolección no está corriendo (falla, reinicio, mantenimiento)</td>
+            <td>Los sensores PRTG indicarán datos obsoletos después de 20 minutos. El sistema de monitoreo enviará alerta automática.</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>Frecuencia de Actualización</h3>
+
+<ul>
+    <li><strong>Proceso de recolección:</strong> Cada 1 minuto</li>
+    <li><strong>Sensores PRTG:</strong> Intervalo recomendado de 1 minuto para visualizar datos en tiempo real</li>
+    <li><strong>Monitoreo automático de servicios:</strong> Cada 15 minutos para detectar servicios inactivos</li>
+    <li><strong>Depuración automática de datos:</strong> Elimina datos más antiguos de 4 días</li>
+</ul>
+
+<!-- ============================================= -->
+<!-- SECCIÓN 8: BENEFICIOS -->
+<!-- ============================================= -->
+
+<h2><span class="emoji">✅</span> Beneficios del Sistema</h2>
+
+<h3>Para el Equipo Operativo (Centro de Operaciones)</h3>
+
+<ul>
+    <li><strong>Detección proactiva de problemas:</strong> Identifica interrupciones en servicios críticos antes de que se conviertan en escalamientos masivos de usuarios. Te permite prepararte y comunicar anticipadamente.</li>
+
+    <li><strong>Reducción de tiempo de respuesta:</strong> Elimina la necesidad de buscar manualmente en múltiples fuentes. Toda la información está centralizada en PRTG.</li>
+
+    <li><strong>Clasificación automática de severidad:</strong> El sistema evalúa y clasifica automáticamente cada medición según los umbrales establecidos: 0-2 (OK/verde), 3 (Warning/amarillo), 4 (Alerta/rojo). La interpretación del estado es inmediata y estandarizada.</li>
+
+    <li><strong>Visibilidad histórica:</strong> PRTG almacena el histórico de datos según su configuración de retención, permitiéndote revisar patrones de comportamiento, identificar incidencias recurrentes y generar análisis retrospectivos con cronología completa.</li>
+</ul>
+
+<h3>Para el Negocio</h3>
+
+<ul>
+    <li><strong>Mitigación de impacto reputacional:</strong> Al detectar y comunicar problemas rápidamente, reduces quejas de clientes y mejoras la percepción de proactividad del área de operaciones.</li>
+
+    <li><strong>Toma de decisiones informada:</strong> Los líderes pueden evaluar el impacto real de interrupciones en servicios externos y decidir acciones (comunicados, contingencias, escalamientos comerciales).</li>
+
+    <li><strong>Cumplimiento de SLAs:</strong> El registro histórico sirve como evidencia de detección temprana y tiempos de respuesta para auditorías y reportes de cumplimiento.</li>
+</ul>
+
+<h3>Para la Planificación</h3>
+
+<ul>
+    <li><strong>Análisis de tendencias:</strong> Los datos históricos permiten identificar patrones de interrupciones (días, horarios, servicios más problemáticos) para planificación de recursos.</li>
+
+    <li><strong>Métricas de confiabilidad:</strong> Puedes calcular el uptime percibido de servicios externos críticos y su impacto en tus operaciones.</li>
+
+    <li><strong>Justificación de inversiones:</strong> Datos cuantitativos sobre frecuencia e impacto de interrupciones ayudan a justificar inversiones en redundancia o servicios alternativos.</li>
+</ul>
+
+<!-- ============================================= -->
+<!-- SECCIÓN 9: RECOMENDACIONES OPERATIVAS -->
+<!-- ============================================= -->
+
+<h2><span class="emoji">🛠️</span> Recomendaciones Operativas</h2>
+
+<h3>Rutina Diaria Sugerida</h3>
+
+<h4>Al Inicio del Turno</h4>
+
+<ol>
+    <li>Acceder al dashboard PRTG y verificar el estado de todos los sensores DownDetector configurados</li>
+    <li>Revisar si hay sensores sin datos recientes o mostrando alertas de disponibilidad</li>
+    <li>Consultar la bitácora del turno anterior para continuidad de incidencias abiertas relacionadas con servicios monitoreados</li>
+    <li>Verificar que no haya alertas de Telegram sin atender sobre errores del sistema de recolección</li>
+    <li>Registrar en bitácora: "Estado inicial de sensores DownDetector: [todos normales / X servicios en atención / problemas identificados]"</li>
+</ol>
+
+<h4>Durante el Turno</h4>
+
+<ol>
+    <li>Revisar el dashboard cada 30-60 minutos o cuando PRTG genere alertas</li>
+    <li>Si un servicio permanece en NORMAL con variaciones: observar por 15-30 minutos y documentar en bitácora si es necesario</li>
+    <li>Si un servicio alcanza ALERTA (StatusCode 4): ejecutar procedimientos de escalamiento inmediato (ver sección de Criterios de Escalamiento)</li>
+    <li>Ante alertas de Telegram sobre errores del sistema de recolección: documentar en bitácora con timestamp. Si persiste más de 1 hora, notificar a equipo técnico responsable del sistema</li>
+    <li>Correlacionar alertas de DownDetector con otros sistemas de monitoreo para confirmar o descartar impacto en infraestructura propia</li>
+</ol>
+
+<h4>Al Final del Turno</h4>
+
+<ol>
+    <li>Documentar en bitácora cualquier cambio de estado observado durante el turno con timestamps y acciones tomadas</li>
+    <li>Verificar que no haya servicios en estado ALERTA sin escalamiento documentado</li>
+    <li>Si hay incidencias en curso, realizar traspaso formal al siguiente turno incluyendo cronología de eventos</li>
+    <li>Reportar al siguiente turno cualquier comportamiento anómalo del sistema (sensores sin datos recurrentes, alertas frecuentes del sistema de recolección)</li>
+</ol>
+
+<h3>Criterios de Escalamiento</h3>
+
+<div class="important">
+    <p><strong>Escalar inmediatamente cuando:</strong></p>
+    <ul>
+        <li>Cualquier servicio alcanza estado ALERTA (StatusCode = 4)</li>
+        <li>Los sensores PRTG muestran "No Data" por más de 30 minutos consecutivos (indica falla del sistema de recolección)</li>
+    </ul>
+</div>
+
+<p><strong>Escalar al Equipo de Infraestructura cuando:</strong></p>
+<ul>
+    <li>Hay alertas recurrentes de Telegram sobre errores de base de datos (más de 3 en un turno)</li>
+    <li>El proceso de recolección está detenido (sensores sin datos por más de 30 minutos)</li>
+    <li>Bloqueos del sistema de recolección persisten por más de 2 horas consecutivas</li>
+</ul>
+
+<p><strong>Escalar al Equipo de Aplicaciones cuando:</strong></p>
+<ul>
+    <li>Servicios críticos (Telegram, WhatsApp) alcanzan estado ALERTA, especialmente si se correlaciona con reportes de usuarios internos</li>
+    <li>Se requiere confirmación de impacto en operaciones que dependen del servicio afectado</li>
+</ul>
+
+<p><strong>Documentar para análisis posterior (sin escalamiento inmediato):</strong></p>
+<ul>
+    <li>Variaciones normales del servicio que se mantienen en estado NORMAL</li>
+    <li>Fluctuaciones rápidas entre estados (posible ruido estadístico)</li>
+    <li>Patrones repetitivos en horarios específicos que puedan indicar comportamiento normal del servicio</li>
+</ul>
+
+<!-- ============================================= -->
+<!-- SECCIÓN 10: ACCESO -->
+<!-- ============================================= -->
+
+<h2><span class="emoji">🔗</span> Acceso al Sistema</h2>
+
+<h3>Dashboard PRTG</h3>
+
+<p><strong>URL de acceso:</strong> [Especificar URL del servidor PRTG de tu organización]</p>
+
+<p><strong>Ubicación de sensores:</strong></p>
+<ul>
+    <li>Ruta en árbol PRTG: <code>Devices → [Nombre del Device] → Sensores DownDetector</code></li>
+    <li>Los sensores típicamente se nombran: <code>DownDetector - [NombreServicio]</code> (ej: "DownDetector - Telegram")</li>
+</ul>
+
+<!-- ============================================= -->
+<!-- SECCIÓN 12: GLOSARIO -->
+<!-- ============================================= -->
+
+<h2><span class="emoji">📖</span> Glosario Técnico Simplificado</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Término</th>
+            <th>Definición</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>BaseLineValue (Línea Base)</strong></td>
+            <td>Valor de referencia que representa el comportamiento "normal" de reportes para un servicio en un momento específico. Es como el "pulso en reposo" de una persona: te dice qué esperar cuando todo está bien.</td>
+        </tr>
+        <tr>
+            <td><strong>DownDetector.com</strong></td>
+            <td>Plataforma pública donde usuarios reportan problemas con servicios populares (redes sociales, mensajería, streaming, etc.). Es la fuente de datos para nuestro sistema.</td>
+        </tr>
+        <tr>
+            <td><strong>Multiplicador</strong></td>
+            <td>Resultado de dividir los reportes actuales entre la línea base (ReportValue / BaseLineValue). Un multiplicador de 5x significa que hay 5 veces más reportes de lo normal.</td>
+        </tr>
+        <tr>
+            <td><strong>PRTG</strong></td>
+            <td>Software de monitoreo de infraestructura usado en tu organización. Nuestro sistema se integra mediante "sensores SQL" que consultan la base de datos y muestran gráficos.</td>
+        </tr>
+        <tr>
+            <td><strong>ReportValue (Reportes)</strong></td>
+            <td>Número de usuarios que están reportando problemas con un servicio en un momento específico. Es el indicador "en vivo" de cuánta gente está experimentando problemas.</td>
+        </tr>
+        <tr>
+            <td><strong>Sensor PRTG</strong></td>
+            <td>Componente de PRTG que obtiene datos desde la base de datos y los convierte en gráficos monitoreables. Es el "puente" entre los datos almacenados y la interfaz de PRTG.</td>
+        </tr>
+        <tr>
+            <td><strong>StatusCode (Código de Estado)</strong></td>
+            <td>Número del -1 al 4 que clasifica la severidad de la situación: -1 = Sin datos, 0-2 = Normal, 3 = Warning, 4 = Alerta.</td>
+        </tr>
+    </tbody>
+</table>
+
+
+<!-- ============================================= -->
+<!-- SECCIÓN 14: CONTROL DE VERSIONES -->
+<!-- ============================================= -->
+
+<h2><span class="emoji">🔄</span> Control de Versiones</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Versión</th>
+            <th>Descripción</th>
+            <th>Área Responsable</th>
+            <th>Fecha</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>1.0</strong></td>
+            <td>Versión inicial de la nota operativa. Incluye guía completa de monitoreo, clasificación de estados, procedimientos operativos, criterios de escalamiento y casos prácticos.</td>
+            <td>Centro de Operaciones / Automatización y Análisis</td>
+            <td>06 de enero de 2026</td>
+        </tr>
+    </tbody>
+</table>
+
+<!-- ============================================= -->
+<!-- PIE DE DOCUMENTO -->
+<!-- ============================================= -->
+
+<hr>
+
+<p style="text-align: center; color: #666666; font-size: 9pt; margin-top: 30pt;">
+    <strong>Nota Operativa - DownDetector API v1.0</strong><br>
+    Documento generado el 06 de enero de 2026<br>
+    Centro de Operaciones (NOC) - Automatización y Análisis<br>
+    Para uso interno exclusivo
+</p>
+
+</body>
+</html>
